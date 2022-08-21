@@ -1,5 +1,10 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
+import {
+  saveInStorage,
+  loadFromStorage,
+  // deleteFromStorage,
+} from './components/storageService/storageService';
 import ContactForm from './components/ContactForm/ContactForm';
 import Filter from './components/Filter/Filter';
 import ContactList from './components/ContactList/ContactList';
@@ -7,14 +12,22 @@ import css from './App.module.css';
 
 class App extends Component {
   state = {
-    contacts: [
-      { id: nanoid(), name: 'дід Іван', number: '+380674591256' },
-      { id: nanoid(), name: 'тітка Маруся', number: '+380674438912' },
-      { id: nanoid(), name: 'баба Галя', number: '+380964510779' },
-      { id: nanoid(), name: 'Лёха Електрик', number: '+380952279126' },
-    ],
+    contacts: [],
     filter: '',
   };
+  componentDidMount() {
+    const contacts = loadFromStorage('phonebook');
+    if (contacts) {
+      this.setState({ contacts: contacts });
+    }
+  }
+  componentDidUpdate(prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      saveInStorage('phonebook', this.state.contacts);
+    }
+  }
+  componentWillUnmount() {}
+
   addContact = ({ name, number }) => {
     const contact = {
       id: nanoid(),
