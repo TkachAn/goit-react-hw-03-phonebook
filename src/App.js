@@ -26,7 +26,6 @@ class App extends Component {
       saveInStorage('phonebook', this.state.contacts);
     }
   }
-  componentWillUnmount() {}
 
   addContact = ({ name, number }) => {
     const contact = {
